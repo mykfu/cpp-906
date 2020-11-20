@@ -79,6 +79,26 @@ bool in_array(const string& needle, string*& haystack, int length) {
 	return false;
 }
 
+bool binary_search(const string& findMe, string*& arr, int length) {
+	int left = 0;
+	int right = length - 1;
+
+	while (left <= right)
+	{
+		int middle = (right + left) / 2;
+		if (arr[middle] == findMe ) {
+			return true;
+		}
+		else if (arr[middle] > findMe) {
+			right = middle - 1;
+		}
+		else {
+			left = middle + 1;
+		}
+	}
+
+	return false;
+}
 
 string* generateWords(string in, int& size) {
 	string* result = new string[0];
@@ -88,16 +108,8 @@ string* generateWords(string in, int& size) {
 		for (int j = 0; j < abc.size(); j++)
 		{
 			current[i] = abc[j];
-
-			for (int k = 0; k < dictLength; k++)
-			{
-				//if (current.replace(i, 1, abc.substr(j, 1)) == dict[k] && current != in) {
-				current[i] = abc[j];
-				if (current == dict[k] && current != in) {
-					//cout << current << endl;
-					addElementToArray(result, size, current);
-					break;
-				}
+			if (current != in && in_array(current, dict, dictLength)) {
+				addElementToArray(result, size, current);
 			}
 		}
 	}
@@ -147,6 +159,8 @@ void game(string begin, string end) {
 	}
 }
 
+#define TEST
+#ifndef TEST
 int main()
 {
 	setlocale(LC_ALL, "ru_RU");
@@ -163,6 +177,7 @@ int main()
 
 	return EXIT_SUCCESS;
 }
+#endif
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
 // Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
