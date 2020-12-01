@@ -63,15 +63,88 @@ bool binary_search(const string& findMe, string*& arr, int length);
 //strcmp(стон, стон) = > 0
 //strcmp(сто, стон) = > -1
 //strcmp(ёж, ель) = > 1
-int strcmp(string left, string right) {
-	//todo
+int strcmp(const char* left, const char* right) {
+	int length = min(strlen(left), strlen(right));
 
+	for (int i = 0; i < length; i++)
+	{
+		char c1 = left[i];
+		char c2 = right[i];
+
+		if (c1 == 'ё') {
+			if (c2 >= 'а' && c2 <= 'е') {
+				return 1;
+			}
+			else if (c2 >= 'ж' && c2 <= 'я') {
+				return -1;
+			}
+		}
+
+		if (c2 == 'ё') {
+			if (c1 >= 'а' && c1 <= 'е') {
+				return -1;
+			}
+			else if (c1 >= 'ж' && c1 <= 'я') {
+				return 1;
+			}
+		}
+
+		if (c1 != c2) return c1 - c2;
+		//if (c1 < c2) return -1;
+		//if (c1 > c2) return 1;
+	}
+
+	return strlen(left) - strlen(right);
 }
 
-#define TEST
+//
+//strcmp(огон, угон) = > -1
+//strcmp(стон, слон) = > 1
+//strcmp(стон, стон) = > 0
+//strcmp(сто, стон) = > -1
+//strcmp(ёж, ель) = > 1
+int strcmp2(const char* left, const char* right) {
+
+
+
+	const unsigned char* s1 = (const unsigned char*) left;
+	const unsigned char* s2 = (const unsigned char*) right;
+
+	unsigned char c1, c2;
+	do {
+		c1 = (unsigned char)*s1++;
+		c2 = (unsigned char)*s2++;
+
+
+		if (c1 == 'ё') {
+			if (c2 >= 'а' && c2 <= 'е') {
+				return 1;
+			}
+			else if (c2 >= 'ж' && c2 <= 'я') {
+				return -1;
+			}
+		}
+
+		if (c2 == 'ё') {
+			if (c1 >= 'а' && c1 <= 'е') {
+				return -1;
+			}
+			else if (c1 >= 'ж' && c1 <= 'я') {
+				return 1;
+			}
+		}
+
+		if (c1 == '\0' || c2 == '\0');
+
+	} while (c1 == c2);
+	return c1 - c2;
+}
+
+//#define TEST
 #ifdef TEST
 int main()
 {
+	setlocale(LC_ALL, "russian");
 	test_in_array();
 	test_pair();
 
@@ -100,6 +173,11 @@ int main()
 
 	cout << (binary_search("jgf", strs, 10) ? "Found!" : "Not found!") << endl;
 	cout << (binary_search("ежик", strs2, 5) ? "Found!" : "Not found!") << endl;
+
+	cout << "expected 1, actual = strcmp(\"ёж\", \"еж\") = " << strcmp("ёж", "еж") << endl;
+	cout << "expected -1, actual = strcmp(\"еж\", \"ёж\") = " << strcmp("еж", "ёж") << endl;
+	cout << "expected -1, actual = strcmp(\"asdf\", \"bsdf\") = " << strcmp("asdf", "bsdf") << endl;
+	cout << "expected -1, actual = strcmp(\"asdf\", \"bsdf\") = " << strcmp2("asdf", "bsdf") << endl;
 
 
 	return EXIT_SUCCESS;

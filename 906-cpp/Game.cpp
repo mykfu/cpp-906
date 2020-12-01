@@ -79,6 +79,8 @@ bool in_array(const string& needle, string*& haystack, int length) {
 	return false;
 }
 
+int strcmp(const char* left, const char* right);
+
 bool binary_search(const string& findMe, string*& arr, int length) {
 	int left = 0;
 	int right = length - 1;
@@ -86,10 +88,10 @@ bool binary_search(const string& findMe, string*& arr, int length) {
 	while (left <= right)
 	{
 		int middle = (right + left) / 2;
-		if (arr[middle] == findMe ) {
+		if (strcmp(arr[middle].c_str(), findMe.c_str()) == 0) {
 			return true;
 		}
-		else if (arr[middle] > findMe) {
+		else if (strcmp(arr[middle].c_str(), findMe.c_str()) > 0) {
 			right = middle - 1;
 		}
 		else {
@@ -100,16 +102,38 @@ bool binary_search(const string& findMe, string*& arr, int length) {
 	return false;
 }
 
-string* generateWords(string in, int& size) {
+int countEqualLetters(const string& left, const string& right) {
+	int counter = 0;
+	for (int i = 0; i < left.size(); i++)
+	{
+		if (left[i] == right[i]) {
+			counter++;
+		}
+	}
+	return counter;
+}
+
+string* generateWords(string in, string out, int& size) {
 	string* result = new string[0];
 	for (int i = 0; i < in.size(); i++)
 	{
 		string current = in;
-		for (int j = 0; j < abc.size(); j++)
-		{
-			current[i] = abc[j];
-			if (current != in && in_array(current, dict, dictLength)) {
+
+		if (out[i] != current[i]) {
+			for (int j = 0; j < abc.size(); j++)
+			{
+				current[i] = abc[j];
+				if (current != in && !in_array(current, history, historyLength) && binary_search(current, dict, dictLength)) {
+					addElementToArray(result, size, current);
+					addElementToArray(history, historyLength, current);
+				}
+			}
+		}
+		else {
+			current[i] = out[i];
+			if (current != in && !in_array(current, history, historyLength) && binary_search(current, dict, dictLength)) {
 				addElementToArray(result, size, current);
+				addElementToArray(history, historyLength, current);
 			}
 		}
 	}
@@ -120,46 +144,59 @@ void printArray(string* strs, int size) {
 	cout << "[";
 	for (int i = 0; i < size; i++)
 	{
-		cout << strs[i] << (i < size - 1 ? ", " : "]\n");
+		cout << strs[i] << (i < size - 1 ? ", " : "");
 	}
+	cout << "]\n";
 }
 
-void game(string begin, string end) {
+void game(const string& begin, const string& end, string* chain, int chain_length) {
 	if (begin == end) {
+		cout << end << "\n";
 		cout << "Found!\n";
 		found = true;
-		return;
-	}
-	if (found) {
 		string current = end;
-		cout << current << endl;
-		for (int i = pairsLength - 1; i >= 0; i--)
-		{
-			if (in_array(current, pairs[i].value, pairs[i].size)) {
-				cout << pairs[i].key << endl;
-				current = pairs[i].key;
-			}
-			if (current == begin) return;
-		}
-
+		addElementToArray(chain, chain_length, begin);
+		printArray(chain, chain_length);
+		cout << "–азмер цепочки = " << chain_length << endl;
+		//cout << current << endl;
+		//for (int i = pairsLength - 1; i >= 0; i--)
+		//{
+		//	if (in_array(current, pairs[i].value, pairs[i].size)) {
+		//		cout << pairs[i].key << endl;
+		//		current = pairs[i].key;
+		//	}
+		//	if (current == begin) return;
+		//}
 		return;
 	}
 
 	cout << begin << ": ";
 	int size = 0;
-	addElementToArray(history, historyLength, begin);
 
 
-	string* result = generateWords(begin, size);
+	string* result = generateWords(begin, end, size);
+
+	if (size > 0) {
+		addElementToArray(chain, chain_length, begin);
+	}
+
 	addElementToArray(pairs, pairsLength, Pair(begin, result, size));
 	printArray(result, size);
 	for (int i = 0; i < size; i++)
 	{
-		if (!in_array(result[i], history, historyLength)) game(result[i], end);
+		if (!found) {
+			game(result[i], end, chain, chain_length);
+		}
 	}
 }
 
-#define TEST
+void game(const string& begin, const string& end) {
+	string* chain = new string[0];
+	int chain_length = 0;
+
+	game(begin, end, chain, chain_length);
+}
+
 #ifndef TEST
 int main()
 {
@@ -172,6 +209,7 @@ int main()
 	//cin >> in >> out;
 	begin = "стук";
 	end = "слон";
+	// стук - сток - стон - слон
 	game(begin, end);
 
 
