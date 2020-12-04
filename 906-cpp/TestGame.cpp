@@ -140,13 +140,7 @@ int strcmp2(const char* left, const char* right) {
 	return c1 - c2;
 }
 
-//#define TEST
-#ifdef TEST
-int main()
-{
-	setlocale(LC_ALL, "russian");
-	test_in_array();
-	test_pair();
+void test_binary() {
 
 	// O(n)
 	int length = 10;
@@ -178,6 +172,31 @@ int main()
 	cout << "expected -1, actual = strcmp(\"еж\", \"ёж\") = " << strcmp("еж", "ёж") << endl;
 	cout << "expected -1, actual = strcmp(\"asdf\", \"bsdf\") = " << strcmp("asdf", "bsdf") << endl;
 	cout << "expected -1, actual = strcmp(\"asdf\", \"bsdf\") = " << strcmp2("asdf", "bsdf") << endl;
+
+}
+
+void quickSort(int* arr, int size) {
+
+}
+
+#define TEST
+#ifdef TEST
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	//test_in_array();
+	//test_pair();
+	//test_binary();
+
+	int length = 10;
+	int* arr = new int[length];
+
+	for (int i = 0; i < length; i++)
+	{
+		arr[i] = rand() % 100;
+		cout << " " << arr[i];
+	}
+
 
 
 	return EXIT_SUCCESS;

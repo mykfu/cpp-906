@@ -197,8 +197,10 @@ void game(const string& begin, const string& end) {
 	game(begin, end, chain, chain_length);
 }
 
+
+
 #ifndef TEST
-int main()
+int main2()
 {
 	setlocale(LC_ALL, "ru_RU");
 	const char* filename = "dict_len4_ansi.txt";
@@ -207,7 +209,7 @@ int main()
 	string begin, end;
 	cout << "Введите два слова из 4 букв:\n";
 	//cin >> in >> out;
-	begin = "стук";
+	begin = "муха";
 	end = "слон";
 	// стук - сток - стон - слон
 	game(begin, end);
