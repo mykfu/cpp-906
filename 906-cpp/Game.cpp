@@ -113,6 +113,8 @@ int countEqualLetters(const string& left, const string& right) {
 	return counter;
 }
 
+void quickSortSameLetters(const string& with, string* arr, int size);
+
 string* generateWords(string in, string out, int& size) {
 	string* result = new string[0];
 	for (int i = 0; i < in.size(); i++)
@@ -181,6 +183,7 @@ void game(const string& begin, const string& end, string* chain, int chain_lengt
 	}
 
 	addElementToArray(pairs, pairsLength, Pair(begin, result, size));
+	quickSortSameLetters(end, result, size);
 	printArray(result, size);
 	for (int i = 0; i < size; i++)
 	{
@@ -200,7 +203,7 @@ void game(const string& begin, const string& end) {
 
 
 #ifndef TEST
-int main2()
+int main()
 {
 	setlocale(LC_ALL, "ru_RU");
 	const char* filename = "dict_len4_ansi.txt";
@@ -209,8 +212,8 @@ int main2()
 	string begin, end;
 	cout << "Введите два слова из 4 букв:\n";
 	//cin >> in >> out;
-	begin = "муха";
-	end = "слон";
+	begin = "аист";
+	end = "джин";
 	// стук - сток - стон - слон
 	game(begin, end);
 

@@ -1,13 +1,14 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "Pair.h"
 using namespace std;
 
 bool in_array(const string& needle, string*& haystack, int length);
 
 void test_in_array() {
-	string* strs = new string[]{ "asdf", "asdf2" };
+	string* strs = new string[2]{ "asdf", "asdf2" };
 	int strsLength = 2;
 	string needle = "asdf";
 	string needle2 = "asdf3";
@@ -18,18 +19,18 @@ void test_in_array() {
 void test_pair() {
 	Pair pair;
 	pair.key = "asdf";
-	pair.value = new string[]{ "asdff", "asdfff" };
+	pair.value = new string[2]{ "asdff", "asdfff" };
 	Pair pair2;
 	pair.key = "asdf2";
-	pair.value = new string[]{ "asdff2", "asdfff2" };
+	pair.value = new string[2]{ "asdff2", "asdfff2" };
 
-	Pair pair3("asdf3", new string[]{ "asdf" }, 1);
+	Pair pair3("asdf3", new string[1]{ "asdf" }, 1);
 
 	cout << pair3.key << endl;
 
 	//Pair pair = { string("asdf"), new string[]{ "asdff", "asdfff" } };
 	//Pair pair2 = { string("asdf"), new string[]{ "asdff", "asdfff" } };
-	Pair* pairs = new Pair[]{pair, pair2};
+	Pair* pairs = new Pair[2]{pair, pair2};
 
 
 }
@@ -162,7 +163,7 @@ void test_binary() {
 	cout << (binary_search(97, nums, 10) ? "Found!" : "Not found!") << endl;
 
 	string* strs = new string[10]{ "asdf", "azdf", "bgfd", "jgf", "kopl", "mlot", "qioa", "ras", "tfas", "xasd" };
-	string* strs2 = new string[]{ "ель", "ежик", "ёжик", "ёлка", "клён",  "туман" };
+	string* strs2 = new string[6]{ "ель", "ежик", "ёжик", "ёлка", "клён",  "туман" };
 
 
 	cout << (binary_search("jgf", strs, 10) ? "Found!" : "Not found!") << endl;
@@ -175,11 +176,81 @@ void test_binary() {
 
 }
 
-void quickSort(int* arr, int size) {
+void swap(int& a, int& b) {
+	int t = a;
+	a = b;
+	b = t;
+}
+
+int part(int* arr, int left, int right) {
+	int pivot = arr[right];
+	for (int i = left; i < right; i++)
+	{
+		if (arr[i] <= pivot) {
+			swap(arr[i], arr[left]);
+			left++;
+		}
+	}
+	swap(arr[right], arr[left]);
+	return left;
+}
+
+void quickSort(int* arr, int left, int right) {
+	if (left < right) {
+		int pi = part(arr, left, right);
+		quickSort(arr, left, pi - 1);
+		quickSort(arr, pi + 1, right);
+	}
 
 }
 
-#define TEST
+void quickSort(int* arr, int size) {
+	quickSort(arr, 0, size - 1);
+}
+
+
+void swap(string& a, string& b) {
+	string t = a;
+	a = b;
+	b = t;
+}
+
+int getSameLetters(const string& left, const string& right) {
+	int counter = 0;
+	for (int i = 0; i < min(left.length(), right.length()); i++)
+	{
+		if (left[i] == right[i]) counter++;
+	}
+	return counter;
+}
+
+int part(const string& with, string* arr, int left, int right) {
+	int pivot = getSameLetters(with, arr[right]);
+	for (int i = left; i < right; i++)
+	{
+		if (getSameLetters(with, arr[i]) >= pivot) {
+			swap(arr[i], arr[left]);
+			left++;
+		}
+	}
+	swap(arr[right], arr[left]);
+	return left;
+}
+
+void quickSortSameLetters(const string& with, string* arr, int left, int right) {
+	if (left < right) {
+		int pi = part(with, arr, left, right);
+		quickSortSameLetters(with, arr, left, pi - 1);
+		quickSortSameLetters(with, arr, pi + 1, right);
+	}
+
+}
+
+void quickSortSameLetters(const string& with, string* arr, int size) {
+	quickSortSameLetters(with, arr, 0, size - 1);
+}
+
+//#define TEST
 #ifdef TEST
 int main()
 {
@@ -196,9 +267,23 @@ int main()
 		arr[i] = rand() % 100;
 		cout << " " << arr[i];
 	}
+	cout << endl;
+	quickSort(arr, length);
+	for (int i = 0; i < length; i++)
+	{
+		cout << " " << arr[i];
+	}
 
-
-
+	cout << endl;
+	string sim = "asdf";
+	cout << sim << ": ";
+	string* strs = new string[4]{"asda", "fdas", "asdf", "afds"};
+	quickSortSameLetters(sim, strs, 4);
+	 
+	for (int i = 0; i < 4; i++)
+	{
+		cout << " " << strs[i];
+	}
 	return EXIT_SUCCESS;
 }
 #endif
