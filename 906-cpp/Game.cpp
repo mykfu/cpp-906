@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 #include "Pair.h"
+#include <queue>
+#include <stack>
 using namespace std;
 
 string* dict;
@@ -173,9 +175,9 @@ void game(const string& begin, const string& end, string* chain, int chain_lengt
 	}
 
 	cout << begin << ": ";
+
+
 	int size = 0;
-
-
 	string* result = generateWords(begin, end, size);
 
 	if (size > 0) {
@@ -193,13 +195,67 @@ void game(const string& begin, const string& end, string* chain, int chain_lengt
 	}
 }
 
-void game(const string& begin, const string& end) {
+void game(const string& begin, const string& end) { // DFS поиск в глубину
+	addElementToArray(history, historyLength, begin);
 	string* chain = new string[0];
 	int chain_length = 0;
 
 	game(begin, end, chain, chain_length);
 }
 
+void print(stack<string> st) {
+	if (st.empty()) return;
+
+	string cur = st.top();
+	st.pop();
+	print(st);
+
+	cout << " " << cur;
+
+	st.push(cur);
+}
+
+void gameBFS(const string& begin, const string& end) {
+	addElementToArray(history, historyLength, begin);
+	queue<string> queue;
+	stack<string> stack;
+	stack.push(begin);
+	queue.push(begin);
+	
+	while (!queue.empty()) {
+		string current = queue.front();
+
+		if (current == end) {
+			cout << end << "\n";
+			cout << "Found!\n";
+			found = true;
+			string current = end;
+			//addElementToArray(chain, chain_length, begin);
+			//printArray(chain, chain_length);
+			//cout << "Размер цепочки = " << chain_length << endl;
+			print(stack);
+			return;
+		}
+
+		queue.pop();
+
+		int size = 0;
+		string* words = generateWords(current, end, size);
+		if (size > 0) {
+			stack.push(current);
+		}
+		else {
+			stack.pop();
+		}
+
+		cout << current << ": ";
+		printArray(words, size);
+
+		for (int i = 0; i < size; i++) {
+			queue.push(words[i]);
+		}
+	}
+}
 
 
 #ifndef TEST
@@ -212,10 +268,10 @@ int main()
 	string begin, end;
 	cout << "Введите два слова из 4 букв:\n";
 	//cin >> in >> out;
-	begin = "аист";
-	end = "джин";
+	begin = "стук";
+	end = "слон";
 	// стук - сток - стон - слон
-	game(begin, end);
+	gameBFS(begin, end);
 
 
 	return EXIT_SUCCESS;

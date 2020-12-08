@@ -2,6 +2,9 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
+#include <queue>
+#include <stack>
 #include "Pair.h"
 using namespace std;
 
@@ -250,14 +253,8 @@ void quickSortSameLetters(const string& with, string* arr, int size) {
 	quickSortSameLetters(with, arr, 0, size - 1);
 }
 
-//#define TEST
-#ifdef TEST
-int main()
-{
-	setlocale(LC_ALL, "russian");
-	//test_in_array();
-	//test_pair();
-	//test_binary();
+void test_array() {
+
 
 	int length = 10;
 	int* arr = new int[length];
@@ -277,13 +274,83 @@ int main()
 	cout << endl;
 	string sim = "asdf";
 	cout << sim << ": ";
-	string* strs = new string[4]{"asda", "fdas", "asdf", "afds"};
+	string* strs = new string[4]{ "asda", "fdas", "asdf", "afds" };
 	quickSortSameLetters(sim, strs, 4);
-	 
+
 	for (int i = 0; i < 4; i++)
 	{
 		cout << " " << strs[i];
 	}
+
+}
+
+void print(queue<int> queue) {
+	cout << "Queue@[";
+	while (!queue.empty()) {
+		cout << " " << queue.front();
+		queue.pop();
+	}
+	cout << "]\n";
+}
+
+void reverse(queue<int>& queue) {
+	stack<int> stack;
+
+	while (!queue.empty()) {
+		stack.push(queue.front());
+		queue.pop();
+	}
+	
+	while (!stack.empty()) {
+		queue.push(stack.top());
+		stack.pop();
+	}
+}
+
+//#define TEST
+#ifdef TEST
+int main()
+{
+	setlocale(LC_ALL, "russian");
+	//test_in_array();
+	//test_pair();
+	//test_binary();
+	//test_array();
+
+	vector<int> v1;
+
+	for (int i = 0; i < 10; i++)
+	{
+		v1.push_back(rand() % 100);
+	}
+
+	for (int i = 0; i < v1.size(); i++)
+	{
+		cout << " " << v1.at(i);
+	}
+
+	for (int n : v1)
+	{
+		cout << " " << n;
+	}
+
+	cout << endl;
+	queue<int> qu; // FIFO
+
+	for (int i = 1; i <= 10; i++)
+	{
+		qu.push(i * 10);
+	}
+	print(qu);
+	reverse(qu);
+	cout << "After reverse:" << endl;
+	print(qu);
+
+	cout << endl;
+	stack<int> stk; // LIFO
+
+
+
 	return EXIT_SUCCESS;
 }
 #endif
